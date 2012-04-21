@@ -88,9 +88,11 @@
 <template name="wrong_letters">
   {{#if show}}
   <div id="wrong_letters">
+    <div class="box">
     {{#each wrong_letters}}
       <span class="letter">{{letter}}</span>
     {{/each}}
+    <div class="box">
   </div>
   {{/if}}
 </template>

@@ -18,6 +18,10 @@ var new_word = function () {
 
 Meteor.methods({
   start_new_game: function () {
+
+    // TODO: focus input upon game start
+    // TODO: investigate performance issue
+
     // create a new game w/ new word
     var game_id = Games.insert({word: new_word(), winner: ''});
 
@@ -25,8 +29,6 @@ Meteor.methods({
     Players.update({game_id: null, idle: false, name: {$ne: ''}},
                    {$set: {game_id: game_id}},
                    {multi: true});
-
-    // TODO: focus input upon game start
 
     // Save a record of who is in the game, so when they leave we can
     // still show them.

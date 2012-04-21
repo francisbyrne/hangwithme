@@ -196,6 +196,8 @@ Template.lobby.show = function () {
   return !game();
 };
 
+// show players waiting in the lobby 
+// (not current player, with names and not in game)
 Template.lobby.waiting = function () {
   var players = Players.find({_id: {$ne: Session.get('player_id')},
                               name: {$ne: ''},
@@ -204,6 +206,8 @@ Template.lobby.waiting = function () {
   return players;
 };
 
+// display number of players in the lobby 
+// (not current player, with names and not in game)
 Template.lobby.count = function () {
   var players = Players.find({_id: {$ne: Session.get('player_id')},
                               name: {$ne: ''},
@@ -212,6 +216,7 @@ Template.lobby.count = function () {
   return players.count();
 };
 
+// disable the play button if no name has been entered
 Template.lobby.disabled = function () {
   var me = player();
   if (me && me.name)
@@ -220,13 +225,19 @@ Template.lobby.disabled = function () {
 };
 
 Template.lobby.events = {
+
+  // update the player's name as they type
   'keyup input#myname': function (evt) {
     var name = $('#lobby input#myname').val().trim();
     Players.update(Session.get('player_id'), {$set: {name: name}});
   },
+
+  // when the player clicks play or presses enter, display loader and
+  // start game
   'click button.startgame, keyup input#myname': function (evt) {
     if (evt.type === "click" ||
         (evt.type === "keyup" && evt.which === 13)) {
+      
       Meteor.call('start_new_game');
     }
   }

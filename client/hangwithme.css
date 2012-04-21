@@ -117,13 +117,16 @@ button:active {
 }
 
 #wrong_letters {
-    height: 80px;
-    width: 100%;
     background-color: #eeeee8;
     border: 1px solid #999999;
     margin: auto;
     margin-bottom: 10px;
     padding: 5px;
+}
+
+#wrong_letters .box {
+    height: 80px;
+    width: 100%;
 }
 
 #error {

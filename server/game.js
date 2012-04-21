@@ -2,6 +2,13 @@
 
 //DICTIONARY = ['hello', 'how'];
 
+
+// pauses for a given number of milliseconds (for testing performance)
+var pause = function (ms) {
+  ms += new Date().getTime();
+  while (new Date() < ms){}
+} 
+
 // generate a new word to guess
 var new_word = function () {
   var num_words = DICTIONARY.length;
@@ -36,11 +43,15 @@ Meteor.methods({
                          {fields: {_id: true, name: true}}).fetch();
     Games.update({_id: game_id}, {$set: {players: p}});
 
+    // set the number of guesses for each player
     p.forEach(function(player) {
       Guesses.insert({player_id: player._id, game_id: game_id, left: 10});
     });
 
-    return game_id;
+    // replicate server latency
+    pause(2000);
+
+    return game_id
   },
 
   keepalive: function (player_id) {

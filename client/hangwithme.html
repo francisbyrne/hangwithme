@@ -48,8 +48,8 @@
 </template>
 
 <template name="lobby">
-    {{#if show }}
     <div id="lobby">
+    {{#if show }}
       <h1>What's your name?</h1>
       <input id="myname" type="text" />
       {{#if count}}
@@ -63,8 +63,13 @@
           {{#if count}} It's on! {{else}} Play solo {{/if}}
         </button>
       </div>
+    {{/if}}
+    {{#if loader}}
+    <div id="loader">
+      <img src="loader.gif" alt="Loading..." width="48px" />
     </div>
     {{/if}}
+    </div>
 </template>
 
 <template name="postgame">

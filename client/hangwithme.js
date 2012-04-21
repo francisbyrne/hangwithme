@@ -192,8 +192,8 @@ Template.guess.events = {
 //////
 
 Template.lobby.show = function () {
-  // only show lobby if we're not in a game
-  return !game();
+  // only show lobby if we're not in a game or loading
+  return ! Session.get('loading') && ! game();
 };
 
 // show players waiting in the lobby 
@@ -224,6 +224,10 @@ Template.lobby.disabled = function () {
   return 'disabled="disabled"';
 };
 
+Template.lobby.loader = function () {
+  return Session.get('loading');
+};
+
 Template.lobby.events = {
 
   // update the player's name as they type
@@ -237,8 +241,10 @@ Template.lobby.events = {
   'click button.startgame, keyup input#myname': function (evt) {
     if (evt.type === "click" ||
         (evt.type === "keyup" && evt.which === 13)) {
-      
-      Meteor.call('start_new_game');
+      Session.set('loading', true);
+      Meteor.call('start_new_game', function() {
+        Session.set('loading', undefined);
+      });
     }
   }
 };

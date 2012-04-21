@@ -1,0 +1,16 @@
+hangwithme
+
+Road Map
+Iteration One (complete):
+ - Single Player
+ - Randomly generated word
+ - No Hangman image (only number of guesses left)
+
+Iteration Two (in progress):
+ - Two player mode - both players race to guess random word
+
+Iteration Three (not started):
+ - HTML5 hangman image that updates with incorrect guesses
+
+Iteration Four (optional, not started):
+ - Difficulty modes

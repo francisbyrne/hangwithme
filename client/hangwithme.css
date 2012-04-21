@@ -62,7 +62,7 @@ button:active {
 
 #player {   
     background-color: #eeeee8;
-    border: 1px solid black;
+    border: 2px solid black;
 }
 
 #player .status {
@@ -123,6 +123,7 @@ button:active {
     border: 1px solid #999999;
     margin: auto;
     margin-bottom: 10px;
+    padding: 5px;
 }
 
 #error {

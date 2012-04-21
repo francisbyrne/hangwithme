@@ -143,6 +143,7 @@ Template.wrong_letters.show = function () {
 };
 
 // display all incorrectly guessed words
+// TODO: add commas between letters
 Template.wrong_letters.wrong_letters = function () {
   var me = player();
 

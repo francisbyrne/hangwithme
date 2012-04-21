@@ -1,0 +1,113 @@
+<head>
+  <title>hang with me</title>
+</head>
+
+<body>
+  <div id="main">
+    <div id="viewport" class="rounded-corners">
+      {{>player}}
+      {{>hangman}}
+      {{>lobby}}
+      {{>word}}
+      {{>wrong_letters}}
+      {{>validation}}
+      {{>postgame}}
+      {{>guess}}
+    </div>
+  </div>
+</body>
+
+<template name="player">
+  {{#if show}}
+  <div id="player">
+    <div class="status {{winlose}}">
+      <div class="header">
+        {{#if my_name}}
+          {{my_name}}
+        {{else}}
+          <span class="unnamed">no name</span>
+        {{/if}}
+          <span class="winner_text">{{winlose}}</span>
+      </div>
+    </div>
+  </div>
+  {{/if}}
+</template>
+
+<template name="hangman">
+  <div id="hangman">
+    <div class="guesses">
+    {{#if ingame}}
+      Guesses: {{guesses_left}}
+    {{else}}
+      Hang Man
+    <!-- <img src="hangman.png" alt="hangman goes here" width=300px /> -->
+    {{/if}}
+    </div>
+  </div>
+</template>
+
+<template name="lobby">
+    {{#if show }}
+    <div id="lobby">
+      <h1>What's your name?</h1>
+      <input id="myname" type="text" />
+      {{#if count}}
+      <h1>{{count}} other players are in the lobby:</h1>
+      {{#each waiting }}
+      <div class="player">{{name}}</div>
+      {{/each}}
+      {{/if}}
+      <div>
+        <button id="startgame" class="startgame" {{{disabled}}}>
+          {{#if count}} It's on! {{else}} Play solo {{/if}}
+        </button>
+      </div>
+    </div>
+    {{/if}}
+</template>
+
+<template name="postgame">
+    {{#if show}}
+    <div id="postgame">
+      <button name="backtolobby" class="lobby">Back to lobby</button>
+    </div>
+    {{/if}}
+</template>
+
+<template name="word">
+  {{#if show}}
+  <div id="word">
+    {{#each correct_letters}}
+      <span class="letter">{{letter}}</span>
+    {{/each}}
+  </div>
+  {{/if}}
+</template>
+
+<template name="wrong_letters">
+  {{#if show}}
+  <div id="wrong_letters">
+    {{#each wrong_letters}}
+      <span class="letter">{{letter}}</span>
+    {{/each}}
+  </div>
+  {{/if}}
+</template>
+
+<template name="validation">
+  {{#if error}}
+  <div id="error">
+    {{error}}
+  </div>
+  {{/if}}
+</template>
+
+<template name="guess">
+  {{#if show}}
+  <div id="guess">
+    <input id="guess_input" type="text" maxlength="1"/>
+    <button name="submit" class="submit">Submit</button>
+  </div>
+  {{/if}}
+</template>

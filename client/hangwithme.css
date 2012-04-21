@@ -1,0 +1,168 @@
+body {
+    margin: 0px;
+    font-family: Helvetica, Arial, sans-serif;
+
+    background:#FFD296;
+}
+
+/* base styles */
+
+input {
+    height: 50px;
+    width: 300px;
+    font-size: 2em;
+    border: 2px solid black;
+    padding: 5px;
+}
+
+button {
+    position: relative;
+    bottom: 3px;
+    margin: 10px;
+    height: 50px;
+    background-color:#E6EFC2;
+    border:1px solid #dedede;
+    font-weight:bold;
+    cursor:pointer;
+    font-size: 1.5em;
+}
+
+button:hover {
+    background-color:#D6DFb2;
+    border:1px solid #C6D880;
+}
+
+button:active {
+    background-color:#529214;
+    border:1px solid #529214;
+    color:#fff;
+}
+
+.rounded-corners {
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -khtml-border-radius: 20px;
+    border-radius: 20px;
+
+    border: 1px solid #FFD296;
+}
+
+/*******/
+
+#main {
+    margin: 20px;
+}
+
+#viewport {
+    padding:10px;
+    margin: auto;
+    width:400px;
+    background-color: #f4f4f4;
+}
+
+#player {   
+    background-color: #eeeee8;
+    border: 1px solid black;
+}
+
+#player .status {
+    padding: 0.5em;
+}
+
+#player .header {
+    width: 100%;
+}
+
+#player .winner {
+    background-color: green;
+    color: white;
+}
+
+#player .winner_text {
+    float: right;
+}
+
+#player .loser {
+    background-color: red;
+    color: white;
+}
+
+#hangman {
+    margin:auto;
+    margin-top:20px;
+    margin-bottom:60px;
+    height:170px;
+    width:300px;
+    border:4px solid #999999;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    padding:2px;
+}
+
+#hangman .guesses {
+    font-size:2em;
+    text-align:center;
+}
+
+#word {
+    text-align:center;
+    font-size: 2em;
+    padding: 5px;
+    margin-top:15px;
+    margin-bottom:15px;
+}
+
+#word .letter {
+    padding:1px;
+}
+
+#wrong_letters {
+    height: 80px;
+    width: 100%;
+    background-color: #eeeee8;
+    border: 1px solid #999999;
+    margin: auto;
+    margin-bottom: 10px;
+}
+
+#error {
+    width: 200px;
+    padding:2px;
+    margin: 5px auto;
+    background-color: red;
+    color: white;
+    border: 2px solid #999999;
+}
+
+#guess {
+    width:200px;
+    margin:auto;
+    /*height: 100px;*/
+}
+
+#guess input {
+    width: 50px;
+}
+
+#postgame {
+    height: 100px;
+    width: 300px;
+    margin: auto;
+    text-align: center;
+}
+
+#login {
+    margin: 100px auto;
+    text-align: center;
+}
+
+#login .error {
+    color: red;
+}
+
+#lobby {
+    margin: auto;
+    margin-top: 100px;
+    margin-bottom: 30px;
+    text-align: center;
+}

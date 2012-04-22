@@ -50,39 +50,41 @@ button:active {
 /*******/
 
 #main {
-    margin: 20px;
+    margin: 40px auto;
 }
 
-#viewport {
+.viewport {
+    margin-left:10px;
+    margin-right:10px;
     padding:10px;
-    margin: auto;
+    float: left;
     width:400px;
     background-color: #f4f4f4;
 }
 
-#player {   
+#header {   
     background-color: #eeeee8;
     border: 2px solid black;
 }
 
-#player .status {
+#header .status {
     padding: 0.5em;
 }
 
-#player .header {
+#header .name {
     width: 100%;
 }
 
-#player .winner {
+#header .winner {
     background-color: green;
     color: white;
 }
 
-#player .winner_text {
+#header .winner_text {
     float: right;
 }
 
-#player .loser {
+#header .loser {
     background-color: red;
     color: white;
 }
@@ -169,4 +171,14 @@ button:active {
     margin-top: 100px;
     margin-bottom: 30px;
     text-align: center;
+}
+
+.multiplayer {
+    width: 900px;
+    margin: auto;
+}
+
+.singleplayer {
+    width: 400px;
+    margin auto;
 }

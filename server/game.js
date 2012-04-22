@@ -49,7 +49,7 @@ Meteor.methods({
     });
 
     // replicate server latency
-    pause(2000);
+    // pause(2000);
 
     return game_id
   },

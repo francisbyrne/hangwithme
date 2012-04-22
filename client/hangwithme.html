@@ -3,25 +3,31 @@
 </head>
 
 <body>
-  <div id="main">
-    <div id="viewport" class="rounded-corners">
-      {{>player}}
+  {{>main}}
+</body>
+
+<template name="main">
+  <div id="main" class="{{multiplayer}}">
+    {{#each players}}
+    <div id="player" class="viewport rounded-corners">
+      {{>header}}
       {{>hangman}}
-      {{>lobby}}
       {{>word}}
       {{>wrong_letters}}
       {{>validation}}
-      {{>postgame}}
       {{>guess}}
+      {{>postgame}}
+      {{>lobby}}
     </div>
+    {{/each}}
   </div>
-</body>
+</template>
 
-<template name="player">
+<template name="header">
   {{#if show}}
-  <div id="player">
+  <div id="header">
     <div class="status {{winlose}}">
-      <div class="header">
+      <div class="name">
         {{#if my_name}}
           {{my_name}}
         {{else}}
@@ -97,7 +103,7 @@
     {{#each wrong_letters}}
       <span class="letter">{{letter}}</span>
     {{/each}}
-    <div class="box">
+    </div>
   </div>
   {{/if}}
 </template>

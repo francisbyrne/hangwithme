@@ -22,6 +22,12 @@ var game = function () {
   return me && me.game_id && Games.findOne(me.game_id);
 };
 
+var is_multiplayer = function () {
+  var g = game();
+  return g && g.players && g.players.length > 1;
+};
+
+
 var correct_letters = function (player_id) {
   var id = (typeof player_id == 'undefined') ?
      pid() : player_id;
@@ -31,6 +37,8 @@ var correct_letters = function (player_id) {
                                 state: 'good'});
 };
 
+// returns number of guesses left for player
+// default: current player
 var guesses_left = function (player_id) {
   var id = (typeof player_id == 'undefined') ?
      pid() : player_id;
@@ -79,7 +87,7 @@ var is_valid_letter = function (letter) {
 
 Template.main.multiplayer = function () {
   var g = game();
-  if (g && g.players && g.players.length > 1)
+  if (is_multiplayer())
     return 'multiplayer';
   else
     return 'singleplayer';
@@ -180,6 +188,21 @@ Template.wrong_letters.show = function () {
 // TODO: add commas between letters
 Template.wrong_letters.wrong_letters = function () {
   var me = player(this._id);
+  if (!me || !me.game_id) return undefined;
+
+  var letters = Letters.find({player_id: me._id, 
+                                game_id: me.game_id, 
+                                state: 'bad'});
+
+  if (is_multiplayer() && player()._id !== this._id) {
+    var masked_letters = [];
+    letters.forEach( function (letter) {
+      masked_letters.push({letter: '+'});
+    });
+    return masked_letters;
+  } else {
+    return letters
+  }
 
   return me && me.game_id && Letters.find({player_id: me._id, 
                                 game_id: me.game_id, 
@@ -289,7 +312,9 @@ Template.lobby.events = {
   'click button.startgame, keyup input#myname': function (evt) {
     if (evt.type === "click" ||
         (evt.type === "keyup" && evt.which === 13)) {
+
       Session.set('loading', true);
+
       Meteor.call('start_new_game', function() {
         Session.set('loading', undefined);
       });

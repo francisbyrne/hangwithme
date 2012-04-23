@@ -59,14 +59,21 @@
       <h1>What's your name?</h1>
       <input id="myname" type="text" />
       {{#if count}}
-      <h1>{{count}} other players are in the lobby:</h1>
-      {{#each waiting }}
-      <div class="player">{{name}}</div>
-      {{/each}}
+      <h2>{{count}} player(s) waiting. Select one:</h2>
+      <select id="player-list" size="5">
+        {{#each waiting }}
+        <option class="player" value="{{_id}}">{{name}}</option>
+        {{/each}}
+      </select>
       {{/if}}
       <div>
-        <button id="startgame" class="startgame" {{{disabled}}}>
-          {{#if count}} It's on! {{else}} Play solo {{/if}}
+        {{#if count}}
+        <button id="start-multi" value="multi" class="startgame" {{{multi_disabled}}}>
+          It's on!
+        </button>
+        {{/if}}
+        <button id="start-solo" value="solo" class="startgame" {{{disabled}}}>
+          Play solo
         </button>
       </div>
     {{/if}}

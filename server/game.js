@@ -24,7 +24,7 @@ var new_word = function () {
 };
 
 Meteor.methods({
-  start_new_game: function () {
+  start_new_game: function (players) {
 
     // TODO: focus input upon game start
     // TODO: investigate performance issue
@@ -33,7 +33,7 @@ Meteor.methods({
     var game_id = Games.insert({word: new_word(), winner: ''});
 
     // move everyone who is ready in the lobby to the game
-    Players.update({game_id: null, idle: false, name: {$ne: ''}},
+    Players.update({_id: {$in: players}},
                    {$set: {game_id: game_id}},
                    {multi: true});
 

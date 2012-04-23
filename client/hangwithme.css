@@ -132,7 +132,7 @@ button:active {
 }
 
 #error {
-    width: 200px;
+    width: 60%;
     padding:2px;
     margin: 5px auto;
     background-color: red;
@@ -168,9 +168,14 @@ button:active {
 
 #lobby {
     margin: auto;
-    margin-top: 100px;
+    margin-top: 20px;
     margin-bottom: 30px;
     text-align: center;
+}
+
+#player-list {
+    width: 60%;
+    margin:auto;
 }
 
 .multiplayer {

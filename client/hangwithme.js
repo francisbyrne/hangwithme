@@ -17,6 +17,10 @@ var player = function (player_id) {
   return Players.findOne(id);
 };
 
+var opponent_id = function () {
+  return Session.get('opponent_id');
+};
+
 var game = function () {
   var me = player();
   return me && me.game_id && Games.findOne(me.game_id);
@@ -188,12 +192,16 @@ Template.wrong_letters.show = function () {
 // TODO: add commas between letters
 Template.wrong_letters.wrong_letters = function () {
   var me = player(this._id);
+
+  // if no player or game return empty
   if (!me || !me.game_id) return undefined;
 
+  // get all bad letters
   var letters = Letters.find({player_id: me._id, 
                                 game_id: me.game_id, 
                                 state: 'bad'});
 
+  // if opponent, mask letters
   if (is_multiplayer() && player()._id !== this._id) {
     var masked_letters = [];
     letters.forEach( function (letter) {
@@ -201,6 +209,8 @@ Template.wrong_letters.wrong_letters = function () {
     });
     return masked_letters;
   } else {
+
+    // else show all letters
     return letters
   }
 
@@ -210,7 +220,7 @@ Template.wrong_letters.wrong_letters = function () {
 };
 
 Template.validation.error = function () {
-  if ( pid() == this._id)
+  if ( pid() == this._id )
     return Session.get('error');
   else
     return undefined;
@@ -295,6 +305,15 @@ Template.lobby.disabled = function () {
   return 'disabled="disabled"';
 };
 
+// disable the play button if no name has been entered
+Template.lobby.multi_disabled = function () {
+  var me = player();
+
+  if (me && me.name && opponent_id())
+    return '';
+  return 'disabled="disabled"';
+};
+
 Template.lobby.loader = function () {
   return Session.get('loading');
 };
@@ -307,15 +326,24 @@ Template.lobby.events = {
     Players.update(pid(), {$set: {name: name}});
   },
 
+  // update the opponent upon selection
+  'mouseup option.player': function (evt) {
+    Session.set('opponent_id', $('#player-list').val());
+  },
+
   // when the player clicks play or presses enter, display loader and
   // start game
   'click button.startgame, keyup input#myname': function (evt) {
     if (evt.type === "click" ||
         (evt.type === "keyup" && evt.which === 13)) {
 
+      var players = [player()._id];
+
+      if (evt.target.value === 'multi') players.push(opponent_id());
+
       Session.set('loading', true);
 
-      Meteor.call('start_new_game', function() {
+      Meteor.call('start_new_game', players, function() {
         Session.set('loading', undefined);
       });
     }

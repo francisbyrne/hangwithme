@@ -53,6 +53,24 @@ var guesses_left = function (player_id) {
   return guesses && guesses.left;
 };
 
+// dissociate player from game and if they are the last player to leave,
+// remove the game, letters and players
+var exit_game = function (player_id, game_id) {
+    
+  Players.update(player_id, {$set: {game_id: null}});
+
+  if ( Players.find({game_id: game_id}).count() < 1 ) {
+    var g = Games.findOne(game_id);
+
+    g.players.forEach( function(p) {
+      Letters.remove({player_id: p._id, game_id: g._id});
+      Guesses.remove({player_id: p._id, game_id: g._id});
+      Players.remove({_id: p._id});
+    });
+    Games.remove({game_id: g._id});
+  }
+};
+
 // check whether letter is alpha and hasn't already been guessed
 var is_valid_letter = function (letter) {
   
@@ -357,7 +375,7 @@ Template.postgame.show = function () {
 
 Template.postgame.events = {
   'click button': function (evt) {
-    Players.update(pid(), {$set: {game_id: null}});
+    exit_game(pid(), game()._id);
   }
 };
 

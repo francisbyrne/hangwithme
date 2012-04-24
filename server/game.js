@@ -7,7 +7,7 @@
 var pause = function (ms) {
   ms += new Date().getTime();
   while (new Date() < ms){}
-} 
+};
 
 // generate a new word to guess
 var new_word = function () {
@@ -71,6 +71,6 @@ Meteor.setInterval(function () {
                  {$set: {idle: true}});
 
   // XXX need to deal with people coming back!
-  // Players.remove({$lt: {last_keepalive: remove_threshold}});
+  Players.remove({$lt: {last_keepalive: remove_threshold}});
 
 }, 30*1000);

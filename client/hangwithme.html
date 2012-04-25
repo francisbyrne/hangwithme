@@ -9,7 +9,7 @@
 <template name="main">
   <div id="main" class="{{multiplayer}}">
     {{#each players}}
-    <div id="player" class="viewport rounded-corners">
+    <div class="player viewport rounded-corners">
       {{>header}}
       {{>hangman}}
       {{>word}}
@@ -29,11 +29,11 @@
     <div class="status {{winlose}}">
       <div class="name">
         {{#if my_name}}
-          {{my_name}}
+        {{my_name}}
         {{else}}
-          <span class="unnamed">no name</span>
+        <span class="unnamed">no name</span>
         {{/if}}
-          <span class="winner_text">{{winlose}}</span>
+        <span class="winner_text">{{winlose}}</span>
       </div>
     </div>
   </div>
@@ -41,14 +41,19 @@
 </template>
 
 <template name="hangman">
-  <div id="hangman">
+  <div id="{{player_id}}" class="hangman">
     <div class="guesses">
-    {{#if ingame}}
-      Guesses: {{guesses_left}}
-    {{else}}
+      {{#if ingame}}
+      <br />
+      {{else}}
       Hang With Me
-    <!-- <img src="hangman.png" alt="hangman goes here" width=300px /> -->
-    {{/if}}
+      {{/if}}
+      <canvas id="hangCanvas" class="{{player_id}}" width="250" height="200" style="border:none">
+        {{#if ingame}}
+        <p>Guesses: {{guesses_left}}</p>
+        {{/if}}
+        <p>Note: Your browser does not support the pretty Hangman animation!</p>
+      </canvas>
     </div>
   </div>
 </template>
@@ -76,6 +81,9 @@
       </div>
     {{/if}}
     {{#if loader}}
+      <div>
+        Waiting for player to accept/decline...
+      </div>
       <div id="loader">
         <img src="loader.gif" alt="Loading..." width="48px" />
       </div>

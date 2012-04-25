@@ -89,11 +89,11 @@ button:active {
     color: white;
 }
 
-#hangman {
+.hangman {
     margin:auto;
     margin-top:20px;
-    margin-bottom:60px;
-    height:170px;
+    margin-bottom:20px;
+    height:250px;
     width:300px;
     border:4px solid #999999;
     border-radius: 4px;
@@ -101,7 +101,7 @@ button:active {
     padding:2px;
 }
 
-#hangman .guesses {
+.hangman .guesses {
     font-size:2em;
     text-align:center;
 }

@@ -99,7 +99,12 @@ var refresh_player = function () {
     }
   });
 
-  error = '';
+  Session.set('error', '');
+
+  // draw complete hangman
+  Meteor.setTimeout(function () {
+    draw_hangman();
+  }, 250);
 };
 
 // get the "good" letters for a player
@@ -187,6 +192,11 @@ Template.main.players = function () {
     return [true];
 };
 
+Template.main.player_id = function () {
+  var id = this.toString();
+  return id;
+};
+
 Template.header.show = function () {
   return is_playing();
 };
@@ -213,10 +223,22 @@ Template.hangman.ingame = function () {
   return is_playing();
 };
 
+Template.hangman.player_id = function () {
+  var id = this.toString();
+  return id;
+};
+
 // return the number of guesses the player has left
 Template.hangman.guesses_left = function () {
   var id = this.toString();
-  return guesses_left(id);
+  var guesses = Guesses.findOne({player_id: id, game_id: gid()});
+
+  // re-draw hangman based on guesses; timeout is so render doesn't overwrite
+  Meteor.setTimeout(function () {
+    draw_hangman(guesses);
+  }, 100);
+  
+  return guesses.left;
 };
 
 Template.word.show = function () {
@@ -458,6 +480,7 @@ Template.invite.versus = function () {
 };
 
 // TODO: repopulate name input on decline
+// TODO: notify inviter on decline
 // handle accepting or declining game invitation
 Template.invite.events = {
   'click button#accept': function (evt) {

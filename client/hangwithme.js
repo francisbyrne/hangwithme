@@ -77,7 +77,16 @@ var pending_game = function (player_id) {
 // TODO: change this for persistent player
 // refresh player on game exit; set new player_id and re-subscribe
 var refresh_player = function () {
-  var player_id = Players.insert({name: '', idle: false, state: 'lobby'});
+  // Allocate a new player id.
+  //
+  // XXX this does not handle hot reload. In the reload case,
+  // pid() will return a real id. We should check for
+  // a pre-existing player, and if it exists, make sure the server still
+  // knows about us.
+  var player_id = Players.insert({name: '', 
+                                  idle: false, 
+                                  state: 'lobby', 
+                                  last_keepalive: (new Date()).getTime()});
   Session.set('player_id', player_id);
 
     // subscribe to all the players, the game i'm in, and all
@@ -381,7 +390,7 @@ Template.lobby.disabled = function () {
 };
 
 // disable the play button if no name has been entered
-Template.lobby.multi_disabled = function () {
+Template.multi.disabled = function () {
   var me = player();
 
   if (me && me.name && opponent_id())
@@ -480,26 +489,9 @@ Template.postgame.events = {
 //////
 
 Meteor.startup(function () {
-  // Allocate a new player id.
-  //
-  // XXX this does not handle hot reload. In the reload case,
-  // pid() will return a real id. We should check for
-  // a pre-existing player, and if it exists, make sure the server still
-  // knows about us.
-  var player_id = Players.insert({name: '', idle: false, state: 'lobby'});
-  Session.set('player_id', player_id);
 
-  // subscribe to all the players, the game i'm in, and all
-  // my guessed letters in that game.
-  Meteor.autosubscribe(function () {
-    Meteor.subscribe('players');
-    Meteor.subscribe('games');
-    if (pid() && gid()) {
-      Meteor.subscribe('letters', pid(), gid());
-    }
-  });
-
-  error = '';
+  // add new player and subscribe
+  refresh_player();
 
   // TODO: fix issue where guess box is cleared/unfocussed 
   // every time this is called
@@ -511,9 +503,7 @@ Meteor.startup(function () {
   // code can go away.
   Meteor.setInterval(function() {
     if (Meteor.status().connected) {
-      Meteor.call('keepalive', pid()); /*, function() {
-        $('#guess input').focus();
-      });*/
+      Meteor.call('keepalive', pid());
     }
   }, 20*1000);
 });

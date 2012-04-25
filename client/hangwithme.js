@@ -147,9 +147,8 @@ var is_valid_letter = function (letter) {
   }
 
   // check if letter has already been guessed
-  var me = player();
-  var guessed_letters = Letters.find({player_id: me._id, 
-                          game_id: me.game_id});
+  var guessed_letters = Letters.find({player_id: pid(), 
+                          game_id: gid()});
   var is_valid = true;
 
   guessed_letters.forEach( function(guessed_letter) {

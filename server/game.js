@@ -24,34 +24,24 @@ var new_word = function () {
 };
 
 Meteor.methods({
-  start_new_game: function (players) {
 
-    // TODO: focus input upon game start
-    // TODO: investigate performance issue
+  // create game_id and send invitation to players to start
+  invite_players: function (player_ids) {
+    var game_id = Games.insert({players: player_ids, state: 'pending'});
+    return game_id;
+  },
 
-    // create a new game w/ new word
-    var game_id = Games.insert({word: new_word(), winner: ''});
+  // update the game with a new word and set play states to playing
+  // and set guesses
+  start_game: function (game_id) {
+    var g = Games.findOne(game_id);
+    Players.update ({_id: {$in: g.players}}, 
+                    {$set: {state: 'playing'}}, 
+                    {multi: true});
+    for (player in g.players)
+      Guesses.insert({player_id: g.players[player], game_id: game_id, left: 10});
 
-    // move everyone who is ready in the lobby to the game
-    Players.update({_id: {$in: players}},
-                   {$set: {game_id: game_id}},
-                   {multi: true});
-
-    // Save a record of who is in the game, so when they leave we can
-    // still show them.
-    var p = Players.find({game_id: game_id},
-                         {fields: {_id: true, name: true}}).fetch();
-    Games.update({_id: game_id}, {$set: {players: p}});
-
-    // set the number of guesses for each player
-    p.forEach(function(player) {
-      Guesses.insert({player_id: player._id, game_id: game_id, left: 10});
-    });
-
-    // replicate server latency
-    // pause(2000);
-
-    return game_id
+    Games.update(game_id, {$set: {word: new_word(), winner: '', state: 'playing'}});
   },
 
   keepalive: function (player_id) {
@@ -73,4 +63,4 @@ Meteor.setInterval(function () {
   // XXX need to deal with people coming back!
   Players.remove({$lt: {last_keepalive: remove_threshold}});
 
-}, 30*1000);
+ }, 30*1000);

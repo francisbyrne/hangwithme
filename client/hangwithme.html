@@ -46,7 +46,7 @@
     {{#if ingame}}
       Guesses: {{guesses_left}}
     {{else}}
-      Hang Man
+      Hang With Me
     <!-- <img src="hangman.png" alt="hangman goes here" width=300px /> -->
     {{/if}}
     </div>
@@ -68,21 +68,37 @@
       {{/if}}
       <div>
         {{#if count}}
-        <button id="start-multi" value="multi" class="startgame" {{{multi_disabled}}}>
-          It's on!
+        <button id="invite" value="multi" class="startgame" {{{multi_disabled}}}>
+          Invite
         </button>
         {{/if}}
-        <button id="start-solo" value="solo" class="startgame" {{{disabled}}}>
+        <button id="solo" value="solo" class="startgame" {{{disabled}}}>
           Play solo
         </button>
       </div>
     {{/if}}
     {{#if loader}}
-    <div id="loader">
-      <img src="loader.gif" alt="Loading..." width="48px" />
-    </div>
+      <div id="loader">
+        <img src="loader.gif" alt="Loading..." width="48px" />
+      </div>
     {{/if}}
+    {{>invite}}
     </div>
+</template>
+
+<template name="invite">
+  {{#if show}}
+  <div id="invite">
+    <div id="versus">
+      {{versus}}
+    </div>
+    <div id="challenge">
+      <div>Do you want to play?</div>
+      <button id="accept">Accept</button>
+      <button id="decline">Decline</button>
+    </div>
+  </div>
+  {{/if}}
 </template>
 
 <template name="postgame">

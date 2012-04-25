@@ -10,10 +10,23 @@ var pid = function () {
   return Session.get('player_id');
 };
 
+var gid = function () {
+  var g = game();
+  return g && game()._id;
+};
+
+// TODO: comment this out (only for ease of dev)
+// empties all collections
+var reset = function () {
+  Players.remove({});
+  Games.remove({});
+  Letters.remove({});
+  Guesses.remove({});
+};
+
 // return player; defaults to this session's player
 var player = function (player_id) {
-  var id = (typeof player_id == 'undefined') ?
-     pid() : player_id;
+  var id = (typeof player_id == 'undefined') ? pid() : player_id;
   return Players.findOne(id);
 };
 
@@ -21,53 +34,97 @@ var opponent_id = function () {
   return Session.get('opponent_id');
 };
 
+// get the current player's current game
 var game = function () {
-  var me = player();
-  return me && me.game_id && Games.findOne(me.game_id);
+  return pid() && Games.findOne({players : pid()});
+};
+
+// helper for player state
+// returns current state if no arg specified
+// else sets the player state to arg
+var my_state = function (state) {
+  if (typeof state == 'undefined') {
+    var p = player();
+    return p && p.state;
+  } else {
+    return Players.update(pid(), {$set: {state: state}});
+  }
+};
+
+// game state methods
+var is_pending = function () {
+  var g = game();
+  return g && g.state === 'pending';
+};
+
+var is_playing = function () {
+  var g = game();
+  return g && g.word;
 };
 
 var is_multiplayer = function () {
   var g = game();
-  return g && g.players && g.players.length > 1;
+  return is_playing() && g.players && g.players.length > 1;
 };
 
+// return pending game for player id
+// default: current player
+var pending_game = function (player_id) {
+  var id = (typeof player_id == 'undefined') ? pid() : player_id;
+  return Games.findOne({state : 'pending', players : id});
+};
 
+// TODO: change this for persistent player
+// refresh player on game exit; set new player_id and re-subscribe
+var refresh_player = function () {
+  var player_id = Players.insert({name: '', idle: false, state: 'lobby'});
+  Session.set('player_id', player_id);
+
+    // subscribe to all the players, the game i'm in, and all
+  // my guessed letters in that game.
+  Meteor.autosubscribe(function () {
+    Meteor.subscribe('players');
+    Meteor.subscribe('games');
+    if (pid() && gid()) {
+      Meteor.subscribe('letters', pid(), gid());
+    }
+  });
+
+  error = '';
+};
+
+// get the "good" letters for a player
 var correct_letters = function (player_id) {
-  var id = (typeof player_id == 'undefined') ?
-     pid() : player_id;
-  var me = player(id);
-  return me && me.game_id && Letters.find({player_id: me._id, 
-                                game_id: me.game_id, 
+  var id = (typeof player_id == 'undefined') ? pid() : player_id;
+  return gid() && Letters.find({player_id: id, 
+                                game_id: gid(), 
                                 state: 'good'});
 };
 
 // returns number of guesses left for player
 // default: current player
 var guesses_left = function (player_id) {
-  var id = (typeof player_id == 'undefined') ?
-     pid() : player_id;
-  var me = player(id);
-  var guesses = me && Guesses.findOne({player_id: id,
-                                game_id: me.game_id});
+  var id = (typeof player_id == 'undefined') ? pid() : player_id;
+  var g = game();
+  var guesses = g && Guesses.findOne({player_id: id, game_id: g._id});
 
   return guesses && guesses.left;
 };
 
-// dissociate player from game and if they are the last player to leave,
+// return player to lobby and, if they are the last player to leave,
 // remove the game, letters and players
 var exit_game = function (player_id, game_id) {
     
-  Players.update(player_id, {$set: {game_id: null}});
+  Players.update(player_id, {$set: {state: 'completed'}});
+  refresh_player();
 
-  if ( Players.find({game_id: game_id}).count() < 1 ) {
-    var g = Games.findOne(game_id);
-
-    g.players.forEach( function(p) {
-      Letters.remove({player_id: p._id, game_id: g._id});
-      Guesses.remove({player_id: p._id, game_id: g._id});
-      Players.remove({_id: p._id});
-    });
-    Games.remove({game_id: g._id});
+  // if player is last to leave
+  var g = Games.findOne(game_id);
+  if (Players.find({_id : {$in: g.players}, state: 'playing'}).count() < 1) {
+    Letters.remove({player_id: {$in: g.players}, game_id: game_id});
+    Guesses.remove({player_id: {$in: g.players}, game_id: game_id});
+    Players.remove({_id: {$in: g.players}});
+    Games.remove({_id: game_id});
   }
 };
 
@@ -108,7 +165,6 @@ var is_valid_letter = function (letter) {
 };
 
 Template.main.multiplayer = function () {
-  var g = game();
   if (is_multiplayer())
     return 'multiplayer';
   else
@@ -117,57 +173,59 @@ Template.main.multiplayer = function () {
 
 Template.main.players = function () {
   var g = game();
-  if (g && g.players) {
+  if (is_playing() && g.players && g.players.length >= 1)
     return g.players;
-  }
-  else {
+  else
     return [true];
-  }
 };
 
 Template.header.show = function () {
-  return game();
+  return is_playing();
 };
 
 // display player name
 Template.header.my_name = function() {
-  return this.name;
+  var id = this.toString();
+  return player(id) && player(id).name;
 };
 
 // display winner
 Template.header.winlose = function () {
   var g = game();
-  if (g && g.winner && g.winner == this._id)
+  var id = this.toString();
+  if (g && g.winner && g.winner == id)
     return 'winner';
-  else if (g && g.winner || guesses_left(this._id) <= 0)
+  else if (g && g.winner || guesses_left(id) <= 0)
     return 'loser';
   return '';
 };
 
 // determine whether in game or in lobby
 Template.hangman.ingame = function () {
-  return game();
+  return is_playing();
 };
 
 // return the number of guesses the player has left
 Template.hangman.guesses_left = function () {
-  return guesses_left(this._id);
+  var id = this.toString();
+  return guesses_left(id);
 };
 
 Template.word.show = function () {
-  return game();
+  return is_playing();
 };
 
+// TODO: this needs to be reviewed/refactored
 // display all the guessed letters in the word, showing '_' for gaps
 Template.word.correct_letters = function () {
   var word = [];
   var is_in_word;
   var g = game();
   var no_gaps = true;
-  var id = this._id;
+  var id = this.toString();
 
   // if a winner is declared, just display the solved word
-  if (g && g.winner == this._id) { //|| guesses_left(id) <= 0) {
+  if (g && g.winner == id) {
     g.word.forEach( function (letter) {
       word.push({letter: letter});
     });
@@ -195,7 +253,7 @@ Template.word.correct_letters = function () {
 
     // if no gaps exist, declare the player winner
     if (no_gaps) {
-      win(g._id, this._id);
+      win(g._id, id);
     }
   }
   
@@ -203,42 +261,43 @@ Template.word.correct_letters = function () {
 };
 
 Template.wrong_letters.show = function () {
-  return game();
+  return is_playing();
 };
 
 // display all incorrectly guessed words
 // TODO: add commas between letters
 Template.wrong_letters.wrong_letters = function () {
-  var me = player(this._id);
+  var id = this.toString();
+  var me = player(id);
 
   // if no player or game return empty
-  if (!me || !me.game_id) return undefined;
+  if (!me || !gid()) return undefined;
 
   // get all bad letters
   var letters = Letters.find({player_id: me._id, 
-                                game_id: me.game_id, 
+                                game_id: gid(), 
                                 state: 'bad'});
 
   // if opponent, mask letters
-  if (is_multiplayer() && player()._id !== this._id) {
+  if (is_multiplayer() && player()._id !== id) {
     var masked_letters = [];
     letters.forEach( function (letter) {
       masked_letters.push({letter: '+'});
     });
     return masked_letters;
   } else {
-
     // else show all letters
     return letters
   }
 
-  return me && me.game_id && Letters.find({player_id: me._id, 
-                                game_id: me.game_id, 
+  return me && gid() && Letters.find({player_id: me._id, 
+                                game_id: gid(), 
                                 state: 'bad'});
 };
 
 Template.validation.error = function () {
-  if ( pid() == this._id )
+  var id = this.toString();
+  if ( pid() == id )
     return Session.get('error');
   else
     return undefined;
@@ -246,8 +305,8 @@ Template.validation.error = function () {
 
 Template.guess.show = function () {
   var g = game();
-
-  return pid() == this._id && g && ! g.winner && guesses_left() > 0;
+  var id = this.toString();
+  return pid() == id && is_playing() && ! g.winner && guesses_left() > 0;
 };
 
 // TODO: get working for mobile
@@ -291,26 +350,25 @@ Template.guess.events = {
 //////
 
 Template.lobby.show = function () {
-  // only show lobby if we're not in a game or loading
-  return ! Session.get('loading') && ! game();
+  return my_state() === 'lobby' && ! pending_game();
 };
 
 // show players waiting in the lobby 
-// (not current player, with names and not in game)
+// (not current player, with names and in lobby)
 Template.lobby.waiting = function () {
   var players = Players.find({_id: {$ne: pid()},
                               name: {$ne: ''},
-                              game_id: {$exists: false}});
+                              state: 'lobby'});
 
   return players;
 };
 
 // display number of players in the lobby 
-// (not current player, with names and not in game)
+// (not current player, with names and in lobby)
 Template.lobby.count = function () {
   var players = Players.find({_id: {$ne: pid()},
                               name: {$ne: ''},
-                              game_id: {$exists: false}});
+                              state: 'lobby'});
 
   return players.count();
 };
@@ -333,7 +391,7 @@ Template.lobby.multi_disabled = function () {
 };
 
 Template.lobby.loader = function () {
-  return Session.get('loading');
+  return my_state() === 'waiting';
 };
 
 Template.lobby.events = {
@@ -349,33 +407,72 @@ Template.lobby.events = {
     Session.set('opponent_id', $('#player-list').val());
   },
 
+  // TODO: need to handle multi and single player differently
   // when the player clicks play or presses enter, display loader and
   // start game
-  'click button.startgame, keyup input#myname': function (evt) {
+  'click button#invite': function (evt) {
+    var player_ids = [player()._id];
+    player_ids.push(opponent_id());
+    Meteor.call('invite_players', player_ids, function(error, result) {
+      if ( typeof result !== Meteor.Error ) my_state('waiting');
+    });
+  },
+  'click button#solo, keyup input#myname': function (evt) {
     if (evt.type === "click" ||
         (evt.type === "keyup" && evt.which === 13)) {
 
-      var players = [player()._id];
-
-      if (evt.target.value === 'multi') players.push(opponent_id());
-
-      Session.set('loading', true);
-
-      Meteor.call('start_new_game', players, function() {
-        Session.set('loading', undefined);
+      var player_ids = [player()._id];
+      Meteor.call('invite_players', player_ids, function (error, result) {
+        my_state('waiting');
+        Meteor.call('start_game', result);
       });
     }
   }
 };
 
+// show invite message when game is pending
+Template.invite.show = function () {
+  return my_state() === 'lobby' && pending_game();
+};
+
+// return players versing in game invitation
+Template.invite.versus = function () {
+  var message = "";
+  var players = pending_game().players;
+
+  for (var i = 0; i < players.length - 1; i++ ) {
+    message += player(players[i]).name + " vs ";
+  }
+
+  message += player(players[i]).name;
+
+  return message;
+};
+
+// TODO: repopulate name input on decline
+// handle accepting or declining game invitation
+Template.invite.events = {
+  'click button#accept': function (evt) {
+    Meteor.call('start_game', gid(), function (error, result) {});
+  },
+  'click button#decline': function (evt) {
+    Players.update( {_id: {$in: pending_game().players}}, 
+                    {$set : {state : 'lobby'}},
+                    {multi : true});
+    remove_game(pending_game()._id);
+  }
+};
+
 Template.postgame.show = function () {
   var g = game();
-  return g && pid() == this._id  && (g.winner || guesses_left(this._id) <= 0);
+  var id = this.toString();
+  return is_playing() && pid() == id  
+    && (g.winner || guesses_left(id) <= 0);
 };
 
 Template.postgame.events = {
   'click button': function (evt) {
-    exit_game(pid(), game()._id);
+    exit_game(pid(), gid());
   }
 };
 
@@ -390,20 +487,16 @@ Meteor.startup(function () {
   // pid() will return a real id. We should check for
   // a pre-existing player, and if it exists, make sure the server still
   // knows about us.
-  var player_id = Players.insert({name: '', idle: false});
+  var player_id = Players.insert({name: '', idle: false, state: 'lobby'});
   Session.set('player_id', player_id);
 
   // subscribe to all the players, the game i'm in, and all
   // my guessed letters in that game.
   Meteor.autosubscribe(function () {
     Meteor.subscribe('players');
-
-    if (pid()) {
-      var me = player();
-      if (me && me.game_id) {
-        Meteor.subscribe('games', me.game_id);
-        Meteor.subscribe('letters', me._id, me.game_id);
-      }
+    Meteor.subscribe('games');
+    if (pid() && gid()) {
+      Meteor.subscribe('letters', pid(), gid());
     }
   });
 
@@ -419,9 +512,9 @@ Meteor.startup(function () {
   // code can go away.
   Meteor.setInterval(function() {
     if (Meteor.status().connected) {
-      Meteor.call('keepalive', pid(), function() {
+      Meteor.call('keepalive', pid()); /*, function() {
         $('#guess input').focus();
-      });
+      });*/
     }
   }, 20*1000);
 });

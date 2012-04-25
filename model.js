@@ -1,17 +1,21 @@
 ////////// Shared code (client and server) //////////
 
+// TODO: decouple word from game and mask word before it goes client-side
 Games = new Meteor.Collection('games');
-// { word: ['h','a','p','p','y'], players: [{player_id, name}], 
-// winner: player_id }
+// { word: ['h','a','p','p','y'], players: [player_id],
+// winner: player_id, state: 'pending'}
+// state is one of: 'pending', 'playing', 'completed'
 
 Players = new Meteor.Collection('players');
-// {name: 'matt', game_id: 123}
+// {name: 'matt', state: 'lobby', idle: false, keepalive: 010203003302}
+// state is one of: 'lobby', 'waiting', 'playing', 'completed'
 
 Letters = new Meteor.Collection('letters');
 // {player_id: 10, game_id: 123, letter: 'a', state: 'good'}
 
 Guesses = new Meteor.Collection('guesses');
 // {player_id: 10, game_id: 123, left: 8}
+
 
 // boolean function whether letter is in word to guess
 var check_letter = function (letter_id) {
@@ -28,6 +32,10 @@ var check_letter = function (letter_id) {
 // end the game with a winner
 var win = function (game_id, player_id) {
   Games.update(game_id, {$set: {winner: player_id}});
+};
+
+var remove_game = function (game_id) {
+  return Games.remove(game_id);
 };
 
 // remotely accessible methods for client
@@ -70,8 +78,8 @@ if (Meteor.is_server) {
     });
 
     // publish single games
-    Meteor.publish('games', function (id) {
-      return Games.find({_id: id});
+    Meteor.publish('games', function () {
+      return Games.find();
     });
 
     // publish all my guessed letters

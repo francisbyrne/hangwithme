@@ -1,16 +1,17 @@
 hangwithme
 
 Road Map
-Iteration One (complete):
+Iteration One (completed):
  - Single Player
  - Randomly generated word
  - No Hangman image (only number of guesses left)
 
-Iteration Two (in progress):
+Iteration Two (completed):
  - Two player mode - both players race to guess random word
 
-Iteration Three (not started):
+Iteration Three (in progress):
  - HTML5 hangman image that updates with incorrect guesses
 
-Iteration Four (optional, not started):
- - Difficulty modes
+Other Ideas:
+ - Difficulty modes (choose from different dictionaries?)
+ - Leaderboard (would require persisted players and games, and login; should still allow anonymous play, maybe prompt for register at the end)

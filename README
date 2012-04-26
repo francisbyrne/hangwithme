@@ -15,3 +15,4 @@ Iteration Three (in progress):
 Other Ideas:
  - Difficulty modes (choose from different dictionaries?)
  - Leaderboard (would require persisted players and games, and login; should still allow anonymous play, maybe prompt for register at the end)
+ - Mobile compatibility

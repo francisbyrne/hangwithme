@@ -1,6 +1,5 @@
 ////////// Shared code (client and server) //////////
 
-// TODO: decouple word from game and mask word before it goes client-side
 Games = new Meteor.Collection('games');
 // { word: ['h','a','p','p','y'], players: [player_id],
 // winner: player_id, state: 'pending'}

@@ -299,7 +299,6 @@ Template.wrong_letters.show = function () {
 };
 
 // display all incorrectly guessed words
-// TODO: add commas between letters
 Template.wrong_letters.wrong_letters = function () {
   var id = this.toString();
   var me = player(id);
@@ -343,7 +342,6 @@ Template.guess.show = function () {
   return pid() == id && is_playing() && ! g.winner && guesses_left() > 0;
 };
 
-// TODO: get working for mobile
 Template.guess.events = {
   'click button, keyup input': function (evt) {
     var textbox = $('#guess input');
@@ -441,9 +439,8 @@ Template.lobby.events = {
     Session.set('opponent_id', $('#player-list').val());
   },
 
-  // TODO: need to handle multi and single player differently
-  // when the player clicks play or presses enter, display loader and
-  // start game
+  // select a player and click invite to invite them to a game
+  // creates player array, creates new game and sends invitation to opponent
   'click button#invite': function (evt) {
     var player_ids = [player()._id];
     player_ids.push(opponent_id());
@@ -451,6 +448,8 @@ Template.lobby.events = {
       if ( typeof result !== Meteor.Error ) my_state('waiting');
     });
   },
+
+  // launches a solo game
   'click button#solo, keyup input#myname': function (evt) {
     if (evt.type === "click" ||
         (evt.type === "keyup" && evt.which === 13)) {
@@ -483,8 +482,6 @@ Template.invite.versus = function () {
   return message;
 };
 
-// TODO: repopulate name input on decline
-// TODO: notify inviter on decline
 // handle accepting or declining game invitation
 Template.invite.events = {
   'click button#accept': function (evt) {
@@ -519,9 +516,6 @@ Meteor.startup(function () {
 
   // add new player and subscribe
   refresh_player();
-
-  // TODO: fix issue where guess box is cleared/unfocussed 
-  // every time this is called
 
   // send keepalives so the server can tell when we go away.
   //

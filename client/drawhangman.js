@@ -18,6 +18,7 @@ var draw_hangman = function(guesses) {
                     .find("#hangCanvas")[0].getContext("2d");
     var guesses_left = guesses.left;
   }
+  
   var i;
   var total_guesses = 10;
   var colour = "#000000";

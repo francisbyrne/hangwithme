@@ -50,7 +50,21 @@ button:active {
 /*******/
 
 #main {
-    margin: 40px auto;
+    margin: 10px auto;
+}
+
+#main .info {
+    text-align: center;
+}
+
+.multiplayer {
+    width: 900px;
+    margin: auto;
+}
+
+.singleplayer {
+    width: 400px;
+    margin auto;
 }
 
 .viewport {
@@ -150,6 +164,10 @@ button:active {
     width: 50px;
 }
 
+#guess .info {
+    text-align:center;
+}
+
 #postgame {
     height: 100px;
     width: 300px;
@@ -176,14 +194,4 @@ button:active {
 #player-list {
     width: 60%;
     margin:auto;
-}
-
-.multiplayer {
-    width: 900px;
-    margin: auto;
-}
-
-.singleplayer {
-    width: 400px;
-    margin auto;
 }

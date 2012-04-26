@@ -8,6 +8,11 @@
 
 <template name="main">
   <div id="main" class="{{multiplayer}}">
+    {{#if info}}
+    <div class="info">
+      <h1>Race to guess the word before your opponent!</h1>
+    </div>
+    {{/if}}
     {{#each players}}
     <div class="player viewport rounded-corners">
       {{>header}}
@@ -156,6 +161,11 @@
   <div id="guess">
     <input id="guess_input" type="text" maxlength="1"/>
     <button name="submit" class="submit">Submit</button>
+  </div>
+  <div class="info">
+    <br />
+    Type a letter and submit (or press Enter) to guess.<br />
+    Incorrect letters will draw the Hangman!
   </div>
   {{/if}}
 </template>

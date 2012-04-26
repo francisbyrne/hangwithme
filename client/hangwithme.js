@@ -184,6 +184,10 @@ Template.main.multiplayer = function () {
     return 'singleplayer';
 };
 
+Template.main.info = function () {
+  return (is_multiplayer()) ? true : false;
+}
+
 Template.main.players = function () {
   var g = game();
   if (is_playing() && g.players && g.players.length >= 1)

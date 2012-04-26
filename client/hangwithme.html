@@ -1,5 +1,5 @@
 <head>
-  <title>hang with me</title>
+  <title>hangwithme</title>
 </head>
 
 <body>
@@ -11,7 +11,7 @@
   <div id="main" class="{{multiplayer}}">
     {{#if info}}
     <div class="info">
-      <h1>Race to guess the word before your opponent!</h1>
+      <h1>race to guess the word before your opponent!</h1>
     </div>
     {{/if}}
     {{#each players}}
@@ -51,18 +51,18 @@
 </template>
 
 <template name="hangman">
-  <div id="{{player_id}}" class="hangman">
-    <div class="guesses">
       {{#if ingame}}
-      <br />
       {{else}}
-      Hang With Me
+      <div id="title">hang with me</div>
       {{/if}}
+  <div id="{{player_id}}" class="hangman">
+    <br />
+    <div class="guesses">
       <canvas id="hangCanvas" class="{{player_id}}" width="250" height="200" style="border:none">
         {{#if ingame}}
-        <p>Guesses: {{guesses_left}}</p>
+        <p>guesses: {{guesses_left}}</p>
         {{/if}}
-        <p>Note: Your browser does not support the pretty Hangman animation!</p>
+        <p>note: your browser does not support the pretty hangman animation!</p>
       </canvas>
     </div>
   </div>
@@ -71,11 +71,11 @@
 <template name="lobby">
     <div id="lobby">
     {{#if show }}
-      <h1>What's your name?</h1>
+      <div class="bigtext">what's your name?</div>
       <input id="myname" type="text" />
       {{#if count}}
-      <h2>{{count}} player(s) waiting. Select one:</h2>
-      <select id="player-list" size="5">
+      <div class="mediumtext">{{count}} player(s) waiting. select:</div>
+      <select id="opponents" size="5">
         {{#each waiting }}
         <option class="player" value="{{_id}}">{{name}}</option>
         {{/each}}
@@ -86,13 +86,13 @@
         {{>multi}}
         {{/if}}
         <button id="solo" value="solo" class="startgame" {{{disabled}}}>
-          Play solo
+          play solo
         </button>
       </div>
     {{/if}}
     {{#if loader}}
       <div>
-        Waiting for player to accept/decline...
+        waiting for player to accept/decline...
       </div>
       <div id="loader">
         <img src="loader.gif" alt="Loading..." width="48px" />
@@ -104,7 +104,7 @@
 
 <template name="multi">
   <button id="invite" value="multi" class="startgame" {{{disabled}}}>
-    Invite
+    invite
   </button>
 </template>
 
@@ -115,9 +115,9 @@
       {{versus}}
     </div>
     <div id="challenge">
-      <div>Do you want to play?</div>
-      <button id="accept">Accept</button>
-      <button id="decline">Decline</button>
+      <div>do you want to play?</div>
+      <button id="accept">accept</button>
+      <button id="decline">decline</button>
     </div>
   </div>
   {{/if}}
@@ -126,7 +126,7 @@
 <template name="postgame">
     {{#if show}}
     <div id="postgame">
-      <button name="backtolobby" class="lobby">Back to lobby</button>
+      <button name="backtolobby" class="lobby">back to lobby</button>
     </div>
     {{/if}}
 </template>
@@ -165,12 +165,14 @@
   {{#if show}}
   <div id="guess">
     <input id="guess_input" type="text" maxlength="1"/>
-    <button name="submit" class="submit">Submit</button>
+    <button name="submit" class="submit">submit</button>
   </div>
-  <div class="info">
-    <br />
-    Type a letter and submit (or press Enter) to guess.<br />
-    Incorrect letters will draw the Hangman!
+  <div id="guessinfo">
+    <ol>
+      <li>type a letter.</li>
+      <li>press submit (or enter) to guess.</li>
+      <li>10 incorrect letters draw hangman.</li>
+    </ol>
   </div>
   {{/if}}
 </template>

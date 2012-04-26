@@ -237,12 +237,15 @@ Template.hangman.guesses_left = function () {
   var id = this.toString();
   var guesses = Guesses.findOne({player_id: id, game_id: gid()});
 
-  // re-draw hangman based on guesses; timeout is so render doesn't overwrite
-  Meteor.setTimeout(function () {
-    draw_hangman(guesses);
-  }, 100);
-  
-  return guesses.left;
+  if (typeof guesses !== 'undefined' && typeof guesses.left !== 'undefined') {
+    // re-draw hangman based on guesses; timeout is so render doesn't overwrite
+    Meteor.setTimeout(function () {
+      draw_hangman(guesses);
+    }, 10);
+    
+    return guesses.left;
+  } else
+    return '';
 };
 
 Template.word.show = function () {
@@ -436,7 +439,7 @@ Template.lobby.events = {
 
   // update the opponent upon selection
   'mouseup option.player': function (evt) {
-    Session.set('opponent_id', $('#player-list').val());
+    Session.set('opponent_id', $('#opponents').val());
   },
 
   // select a player and click invite to invite them to a game

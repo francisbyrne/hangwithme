@@ -50,7 +50,7 @@ button:active {
 /*******/
 
 #main {
-    margin: 10px auto;
+    margin: 20px auto;
 }
 
 #main .info {
@@ -138,11 +138,13 @@ button:active {
     margin: auto;
     margin-bottom: 10px;
     padding: 5px;
+    height: 20px;
+    width: 80%;
+    text-align: center;
 }
 
-#wrong_letters .box {
-    height: 80px;
-    width: 100%;
+#wrong_letters .letter {
+    padding: 3px;
 }
 
 #error {
@@ -155,8 +157,8 @@ button:active {
 }
 
 #guess {
-    width:200px;
-    margin:auto;
+    width: 200px;
+    margin: auto;
     /*height: 100px;*/
 }
 
@@ -165,7 +167,7 @@ button:active {
 }
 
 #guess .info {
-    text-align:center;
+    text-align: center;
 }
 
 #postgame {
@@ -189,6 +191,10 @@ button:active {
     margin-top: 20px;
     margin-bottom: 30px;
     text-align: center;
+}
+
+#lobby .buttons {
+    margin-top: 10px;
 }
 
 #player-list {

@@ -9,8 +9,10 @@ Iteration One (completed):
 Iteration Two (completed):
  - Two player mode - both players race to guess random word
 
-Iteration Three (in progress):
+Iteration Three (completed):
  - HTML5 hangman image that updates with incorrect guesses
+
+Core functionality is complete...
 
 Other Ideas:
  - Difficulty modes (choose from different dictionaries?)

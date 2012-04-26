@@ -46,9 +46,8 @@ var my_state = function (state) {
   if (typeof state == 'undefined') {
     var p = player();
     return p && p.state;
-  } else {
+  } else
     return Players.update(pid(), {$set: {state: state}});
-  }
 };
 
 // game state methods
@@ -261,11 +260,15 @@ Template.word.correct_letters = function () {
   var no_gaps = true;
   var id = this.toString();
 
-  // if a winner is declared, just display the solved word
-  if (g && g.winner == id) {
+  // if a winner is declared (or single player and no guesses left)
+  // display the solved word
+  if (g && g.winner == id 
+    || is_playing() && ! is_multiplayer() && guesses_left() <= 0) {
+
     g.word.forEach( function (letter) {
       word.push({letter: letter});
     });
+  
   } else if (g && g.word && id && correct_letters(id)) {
 
     // otherwise display guessed letters (or + for opponent)

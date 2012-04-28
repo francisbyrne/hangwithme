@@ -185,7 +185,7 @@ Template.main.multiplayer = function () {
 
 Template.main.info = function () {
   return (is_multiplayer()) ? true : false;
-}
+};
 
 Template.main.players = function () {
   var g = game();

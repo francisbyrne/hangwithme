@@ -15,15 +15,6 @@ var gid = function () {
   return g && game()._id;
 };
 
-// TODO: comment this out (only for ease of dev)
-// empties all collections
-var reset = function () {
-  Players.remove({});
-  Games.remove({});
-  Letters.remove({});
-  Guesses.remove({});
-};
-
 // return player; defaults to this session's player
 var player = function (player_id) {
   var id = (typeof player_id == 'undefined') ? pid() : player_id;
@@ -95,6 +86,7 @@ var refresh_player = function () {
     Meteor.subscribe('games');
     if (pid() && gid()) {
       Meteor.subscribe('letters', pid(), gid());
+      Meteor.subscribe('guesses', pid(), gid());
     }
   });
 
@@ -519,6 +511,15 @@ Template.postgame.events = {
 //////
 
 Meteor.startup(function () {
+
+  // preserve inputs
+  Template.lobby.preserve({
+    'input[id]': function (node) { return node.id; }
+  });
+
+  Template.guess.preserve({
+    'input[id]': function (node) { return node.id; }
+  });
 
   // add new player and subscribe
   refresh_player();

@@ -51,6 +51,29 @@ Meteor.methods({
   }
 });
 
+Meteor.startup(function () {
+    // publish all the non-idle players.
+    Meteor.publish('players', function () {
+      return Players.find({idle: false});
+    });
+
+    // publish single games
+    Meteor.publish('games', function () {
+      return Games.find();
+    });
+
+    // publish all my guessed letters
+    Meteor.publish('letters', function (player_id, game_id) {
+      return Letters.find({player_id: player_id, game_id: game_id});
+    });
+
+    // publish all guesses
+    Meteor.publish('guesses', function (player_id, game_id) {
+      return Guesses.find({player_id: player_id, game_id: game_id});
+    });
+
+});
+
 // monitor/set idle players
 Meteor.setInterval(function () {
   var now = (new Date()).getTime();
@@ -64,3 +87,8 @@ Meteor.setInterval(function () {
   Players.remove({last_keepalive: {$lt: remove_threshold}});
 
  }, 30*1000);
+
+// reset db once a day, to prevent performance degradation
+Meteor.setInterval(function () {
+  reset();
+ }, 24*60*60*1000);

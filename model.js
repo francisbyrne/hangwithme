@@ -15,6 +15,15 @@ Letters = new Meteor.Collection('letters');
 Guesses = new Meteor.Collection('guesses');
 // {player_id: 10, game_id: 123, left: 8}
 
+// TODO: comment this out (only for ease of dev)
+// empties all collections
+var reset = function () {
+  Players.remove({});
+  Games.remove({});
+  Letters.remove({});
+  Guesses.remove({});
+};
+
 
 // boolean function whether letter is in word to guess
 var check_letter = function (letter_id) {
@@ -67,30 +76,3 @@ Meteor.methods({
     }
   }
 });
-
-
-if (Meteor.is_server) {
-  Meteor.startup(function () {
-    // publish all the non-idle players.
-    Meteor.publish('players', function () {
-      return Players.find({idle: false});
-    });
-
-    // publish single games
-    Meteor.publish('games', function () {
-      return Games.find();
-    });
-
-    // publish all my guessed letters
-    Meteor.publish('letters', function (player_id, game_id) {
-      return Letters.find({player_id: player_id, game_id: game_id});
-    });
-
-    // publish all guesses
-    Meteor.publish('guesses', function (player_id, game_id) {
-      return Guesses.find({player_id: player_id, game_id: game_id});
-    });
-
-  });
-
-}

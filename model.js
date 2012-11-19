@@ -24,6 +24,17 @@ var reset = function () {
   Guesses.remove({});
 };
 
+// helper max function
+maxlength = function(array) {
+  var max = '';
+  for (item in array) {
+    var val = array[item];
+    if (val.length > max.length) {
+      max = val;
+    }
+  }
+  return max;
+};
 
 // boolean function whether letter is in word to guess
 var check_letter = function (letter_id) {

@@ -1,7 +1,5 @@
 ////////// Server only logic //////////
 
-//DICTIONARY = ['hello', 'how'];
-
 
 // pauses for a given number of milliseconds (for testing performance)
 var pause = function (ms) {
@@ -14,9 +12,6 @@ var new_word = function () {
   var num_words = DICTIONARY.length;
   var rand = Math.floor(Math.random() * num_words);
   word_string = DICTIONARY[rand];
-
-  // for debugging
-  // var word_string = "hello";
 
   var letters = (word_string).split('');
 

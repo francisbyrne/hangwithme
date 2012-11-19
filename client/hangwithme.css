@@ -48,6 +48,10 @@ button:active {
     font-size: 1.5em;
 }
 
+.smltext {
+    font-size: 1em;
+}
+
 .rounded-corners {
     -moz-border-radius: 20px;
     -webkit-border-radius: 20px;
@@ -139,7 +143,7 @@ button:active {
 
 #word {
     text-align:center;
-    font-size: 2em;
+    /*font-size: 2em;*/
     padding: 5px;
     margin-top:15px;
     margin-bottom:15px;

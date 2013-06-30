@@ -93,9 +93,7 @@ var refresh_player = function () {
   Session.set('error', '');
 
   // draw complete hangman
-  Meteor.setTimeout(function () {
-    draw_hangman();
-  }, 250);
+  Meteor.setTimeout( draw_hangman, 250);
 };
 
 // get the "good" letters for a player

@@ -1,4 +1,8 @@
-hangwithme
+Hang With Me
+
+A multiplayer hang-man guessing game, using the Meteor Framework.
+
+[View Demo](http://hangwithme.meteor.com/)
 
 Framework used:
  - Meteor Framework, an ultra-simple environment for building modern websites. Encorporates simple templating, latency compensation between multiple clients and a server and live HTML that is updated reactively as data changes.

@@ -85,7 +85,7 @@
         {{#if count}}
         {{>multi}}
         {{/if}}
-        <button id="solo" value="solo" class="startgame" {{{disabled}}}>
+        <button id="solo" value="solo" class="startgame" disabled="{{disabled}}">
           play solo
         </button>
       </div>
@@ -103,7 +103,7 @@
 </template>
 
 <template name="multi">
-  <button id="invite" value="multi" class="startgame" {{{disabled}}}>
+  <button id="invite" value="multi" class="startgame" disabled="{{disabled}}">
     invite
   </button>
 </template>

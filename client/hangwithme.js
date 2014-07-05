@@ -406,7 +406,7 @@ Template.lobby.disabled = function () {
   var me = player();
   if (me && me.name)
     return '';
-  return 'disabled="disabled"';
+  return 'disabled';
 };
 
 // disable the play button if no name has been entered
@@ -415,7 +415,7 @@ Template.multi.disabled = function () {
 
   if (me && me.name && opponent_id())
     return '';
-  return 'disabled="disabled"';
+  return 'disabled';
 };
 
 Template.lobby.loader = function () {
@@ -509,15 +509,6 @@ Template.postgame.events = {
 //////
 
 Meteor.startup(function () {
-
-  // preserve inputs
-  Template.lobby.preserve({
-    'input[id]': function (node) { return node.id; }
-  });
-
-  Template.guess.preserve({
-    'input[id]': function (node) { return node.id; }
-  });
 
   // add new player and subscribe
   refresh_player();

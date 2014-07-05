@@ -2,7 +2,7 @@
 
 // draws hangman image based on number of guesses passed in
 // if no guesses are passed in, show whole image
-var draw_hangman = function(guesses) {
+draw_hangman = function(guesses) {
 
   var total_guesses = 10;
   var colour = "#000000";

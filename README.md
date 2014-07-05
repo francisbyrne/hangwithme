@@ -1,5 +1,5 @@
 Hang With Me
-
+======
 A multiplayer hang-man guessing game, using the Meteor Framework.
 
 [View Demo](http://hangwithme.meteor.com/)

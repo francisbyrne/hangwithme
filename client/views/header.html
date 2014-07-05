@@ -1,0 +1,16 @@
+<template name="header">
+  {{#if show}}
+  <div id="header">
+    <div class="status {{winlose}}">
+      <div class="name">
+        {{#if my_name}}
+        {{my_name}}
+        {{else}}
+        <span class="unnamed">no name</span>
+        {{/if}}
+        <span class="winner_text">{{winlose}}</span>
+      </div>
+    </div>
+  </div>
+  {{/if}}
+</template>

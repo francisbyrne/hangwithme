@@ -1,0 +1,62 @@
+<template name="lobby">
+    <div id="lobby">
+    {{#if show }}
+      <div class="bigtext">what's your name?</div>
+      <input id="myname" type="text" />
+      {{#if count}}
+      <div class="mediumtext">{{count}} player(s) waiting. select:</div>
+      <select id="opponents" size="5">
+        {{#each waiting }}
+        <option class="player" value="{{_id}}">{{name}}</option>
+        {{/each}}
+      </select>
+      {{/if}}
+      <div class="buttons">
+        {{#if count}}
+        {{>multi}}
+        {{/if}}
+        <button id="solo" value="solo" class="startgame" disabled="{{disabled}}">
+          play solo
+        </button>
+      </div>
+    {{/if}}
+    {{#if loader}}
+      <div>
+        waiting for player to accept/decline...
+      </div>
+      <div id="loader">
+        <img src="loader.gif" alt="Loading..." width="48px" />
+      </div>
+    {{/if}}
+    {{>invite}}
+    </div>
+</template>
+
+<template name="multi">
+  <button id="invite" value="multi" class="startgame" disabled="{{disabled}}">
+    invite
+  </button>
+</template>
+
+<template name="invite">
+  {{#if show}}
+  <div id="invite">
+    <div id="versus">
+      {{versus}}
+    </div>
+    <div id="challenge">
+      <div>do you want to play?</div>
+      <button id="accept">accept</button>
+      <button id="decline">decline</button>
+    </div>
+  </div>
+  {{/if}}
+</template>
+
+<template name="postgame">
+    {{#if show}}
+    <div id="postgame">
+      <button name="backtolobby" class="lobby">back to lobby</button>
+    </div>
+    {{/if}}
+</template>

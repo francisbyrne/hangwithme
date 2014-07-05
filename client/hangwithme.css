@@ -29,15 +29,17 @@ button {
     font-family: 'Courier New', Courier;
 }
 
-button:hover {
+button:hover:not(:disabled) {
     background-color:#D6DFb2;
     border:1px solid #C6D880;
 }
-
-button:active {
+button:active:not(:disabled) {
     background-color:#529214;
     border:1px solid #529214;
     color:#fff;
+}
+button:disabled {
+    background-color: #CFCFCE;
 }
 
 .bigtext {

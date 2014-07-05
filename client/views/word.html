@@ -1,0 +1,45 @@
+<template name="word">
+  {{#if show}}
+  <div id="word" class="bigtext">
+    {{#each correct_letters}}
+      <span class="letter">{{letter}}</span>
+    {{/each}}
+  </div>
+  {{/if}}
+</template>
+
+<template name="wrong_letters">
+  {{#if show}}
+  <div id="wrong_letters">
+    <div class="box">
+    {{#each wrong_letters}}
+      <span class="letter">{{letter}}</span>
+    {{/each}}
+    </div>
+  </div>
+  {{/if}}
+</template>
+
+<template name="validation">
+  {{#if error}}
+  <div id="error">
+    {{error}}
+  </div>
+  {{/if}}
+</template>
+
+<template name="guess">
+  {{#if show}}
+  <div id="guess">
+    <input id="guess_input" type="text" maxlength="1"/>
+    <button name="submit" class="submit">submit</button>
+  </div>
+  <div id="guessinfo">
+    <ol>
+      <li>type a letter.</li>
+      <li>press submit (or enter) to guess.</li>
+      <li>10 incorrect letters draw hangman.</li>
+    </ol>
+  </div>
+  {{/if}}
+</template>

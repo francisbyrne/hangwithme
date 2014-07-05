@@ -17,7 +17,7 @@ Guesses = new Meteor.Collection('guesses');
 
 // TODO: comment this out (only for ease of dev)
 // empties all collections
-var reset = function () {
+reset = function () {
   Players.remove({});
   Games.remove({});
   Letters.remove({});
@@ -37,7 +37,7 @@ maxlength = function(array) {
 };
 
 // boolean function whether letter is in word to guess
-var check_letter = function (letter_id) {
+check_letter = function (letter_id) {
   var letter = Letters.findOne(letter_id);
   var game = Games.findOne(letter.game_id);
 
@@ -49,11 +49,11 @@ var check_letter = function (letter_id) {
 };
 
 // end the game with a winner
-var win = function (game_id, player_id) {
+win = function (game_id, player_id) {
   Games.update(game_id, {$set: {winner: player_id}});
 };
 
-var remove_game = function (game_id) {
+remove_game = function (game_id) {
   return Games.remove(game_id);
 };
 

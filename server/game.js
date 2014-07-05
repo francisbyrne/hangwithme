@@ -20,6 +20,22 @@ var new_word = function () {
 
 Meteor.methods({
 
+  // return player to lobby and, if they are the last player to leave,
+  // remove the game, letters and players
+  exit_game: function (player_id, game_id) {
+      
+    Players.update(player_id, {$set: {state: 'completed'}});
+
+    // if player is last to leave
+    var g = Games.findOne(game_id);
+    if (Players.find({_id : {$in: g.players}, state: 'playing'}).count() < 1) {
+      Letters.remove({player_id: {$in: g.players}, game_id: game_id});
+      Guesses.remove({player_id: {$in: g.players}, game_id: game_id});
+      Players.remove({_id: {$in: g.players}});
+      Games.remove(game_id);
+    }
+  },
+
   // create game_id and send invitation to players to start
   invite_players: function (player_ids) {
     var game_id = Games.insert({players: player_ids, state: 'pending'});

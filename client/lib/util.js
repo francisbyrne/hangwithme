@@ -78,7 +78,7 @@ refresh_player = function () {
 
     // subscribe to all the players, the game i'm in, and all
   // my guessed letters in that game.
-  Meteor.autosubscribe(function () {
+  Meteor.autorun(function () {
     Meteor.subscribe('players');
     Meteor.subscribe('games');
     if (pid() && gid()) {
